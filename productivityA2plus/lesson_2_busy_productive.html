@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Busy vs Productive — Practice | AnastasiaBer</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #0f766e;
+      --accent-soft: #ecfdf5;
+      --accent2: #b45309;
+      --accent2-soft: #fffbeb;
+      --accent3: #4f46e5;
+      --accent3-soft: #eef2ff;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --error: #dc2626;
+      --error-soft: #fef2f2;
+      --radius: 12px;
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2rem 1rem 3rem;
+    }
+
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .tag.neutral {
+      background: var(--surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .block.b1 { border-top: 3px solid var(--accent); }
+    .block.b2 { border-top: 3px solid var(--accent2); }
+    .block.b3 { border-top: 3px solid var(--accent3); }
+
+    .block-header {
+      padding: 1.1rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      background: #fafbfc;
+    }
+
+    .block-topic {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .block-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .block-body {
+      padding: 1rem 1.25rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .exercise {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .exercise.correct {
+      border-color: var(--success);
+      background: var(--success-soft);
+    }
+
+    .exercise.incorrect {
+      border-color: var(--error);
+      background: var(--error-soft);
+    }
+
+    .exercise-number {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+    }
+
+    .sentence {
+      font-size: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.5rem;
+    }
+
+    .sentence .term {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    select {
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.4rem 2rem 0.4rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      min-width: 11rem;
+      max-width: 100%;
+    }
+
+    select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    .actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover { opacity: 0.9; }
+    button:active { opacity: 0.8; }
+
+    #result {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      min-height: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    #result.success { color: var(--success); }
+    #result.partial { color: var(--text); }
+
+    .hint {
+      margin-top: 2rem;
+      padding: 1rem 1.25rem;
+      background: var(--accent-soft);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .hint strong { color: var(--text); }
+
+    @media (max-width: 480px) {
+      select {
+        width: 100%;
+        min-width: unset;
+      }
+
+      .sentence {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="tags">
+      <span class="tag">A2+</span>
+      <span class="tag neutral">Lesson 2</span>
+      <span class="tag neutral">AnastasiaBer</span>
+      <span class="tag neutral">Busy vs Productive</span>
+    </div>
+
+    <h1>Busy vs Productive</h1>
+    <p class="subtitle">3 блока — лексика, выбор слова в контексте, Present Perfect / Past Simple.</p>
+
+    <form id="quiz" class="blocks" novalidate>
+
+      <!-- Block 1: Vocabulary -->
+      <section class="block b1">
+        <div class="block-header">
+          <div class="block-topic">Block 1</div>
+          <div class="block-title">New vocabulary — match the meaning</div>
+        </div>
+        <div class="block-body">
+          <div class="exercise" data-answer="to delay doing something">
+            <div class="exercise-number">1</div>
+            <div class="sentence">
+              <span class="term">procrastinate</span>
+              <span>—</span>
+              <select name="q1" aria-label="procrastinate">
+                <option value="">— choose —</option>
+                <option value="to delay doing something">to delay doing something</option>
+                <option value="to give tasks to other people">to give tasks to other people</option>
+                <option value="to do many things at once">to do many things at once</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="to decide what is most important">
+            <div class="exercise-number">2</div>
+            <div class="sentence">
+              <span class="term">prioritize</span>
+              <span>—</span>
+              <select name="q2" aria-label="prioritize">
+                <option value="">— choose —</option>
+                <option value="to decide what is most important">to decide what is most important</option>
+                <option value="to feel too tired from work">to feel too tired from work</option>
+                <option value="to mark a task as done">to mark a task as done</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="extreme tiredness from too much work">
+            <div class="exercise-number">3</div>
+            <div class="sentence">
+              <span class="term">burnout</span>
+              <span>—</span>
+              <select name="q3" aria-label="burnout">
+                <option value="">— choose —</option>
+                <option value="a short rest from work">a short rest from work</option>
+                <option value="extreme tiredness from too much work">extreme tiredness from too much work</option>
+                <option value="something that stops you from focusing">something that stops you from focusing</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="to give tasks to other people">
+            <div class="exercise-number">4</div>
+            <div class="sentence">
+              <span class="term">delegate</span>
+              <span>—</span>
+              <select name="q4" aria-label="delegate">
+                <option value="">— choose —</option>
+                <option value="to give tasks to other people">to give tasks to other people</option>
+                <option value="to work without distractions">to work without distractions</option>
+                <option value="to postpone until later">to postpone until later</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Block 2: Busy vs productive -->
+      <section class="block b2">
+        <div class="block-header">
+          <div class="block-topic">Block 2</div>
+          <div class="block-title">Choose the best word</div>
+        </div>
+        <div class="block-body">
+          <div class="exercise" data-answer="productive">
+            <div class="exercise-number">5</div>
+            <div class="sentence">
+              <span>I finished my main project today. It was a really</span>
+              <select name="q5" aria-label="productive">
+                <option value="">— choose —</option>
+                <option value="busy">busy</option>
+                <option value="productive">productive</option>
+                <option value="exhausted">exhausted</option>
+              </select>
+              <span>day.</span>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="spinning my wheels">
+            <div class="exercise-number">6</div>
+            <div class="sentence">
+              <span>I answered 50 emails but didn't finish my report. I was just</span>
+              <select name="q6" aria-label="spinning wheels">
+                <option value="">— choose —</option>
+                <option value="making progress">making progress</option>
+                <option value="spinning my wheels">spinning my wheels</option>
+                <option value="taking a break">taking a break</option>
+              </select>
+              <span>all morning.</span>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="achievement">
+            <div class="exercise-number">7</div>
+            <div class="sentence">
+              <span>Finishing the presentation was a real</span>
+              <select name="q7" aria-label="achievement">
+                <option value="">— choose —</option>
+                <option value="distraction">distraction</option>
+                <option value="deadline">deadline</option>
+                <option value="achievement">achievement</option>
+              </select>
+              <span>— not just another small task.</span>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="put off">
+            <div class="exercise-number">8</div>
+            <div class="sentence">
+              <span>I kept</span>
+              <select name="q8" aria-label="put off">
+                <option value="">— choose —</option>
+                <option value="put off">put off</option>
+                <option value="prioritized">prioritized</option>
+                <option value="delegated">delegated</option>
+              </select>
+              <span>the difficult task and did easy things instead.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Block 3: Present Perfect vs Past Simple -->
+      <section class="block b3">
+        <div class="block-header">
+          <div class="block-topic">Block 3</div>
+          <div class="block-title">Present Perfect or Past Simple?</div>
+        </div>
+        <div class="block-body">
+          <div class="exercise" data-answer="have attended">
+            <div class="exercise-number">9</div>
+            <div class="sentence">
+              <span>Today I</span>
+              <select name="q9" aria-label="have attended">
+                <option value="">— choose —</option>
+                <option value="have attended">have attended</option>
+                <option value="attended">attended</option>
+                <option value="was attending">was attending</option>
+              </select>
+              <span>three meetings so far.</span>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="sent">
+            <div class="exercise-number">10</div>
+            <div class="sentence">
+              <span>I</span>
+              <select name="q10" aria-label="sent">
+                <option value="">— choose —</option>
+                <option value="have sent">have sent</option>
+                <option value="sent">sent</option>
+                <option value="was sending">was sending</option>
+              </select>
+              <span>the report to my boss at 4 p.m. yesterday.</span>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="haven't made">
+            <div class="exercise-number">11</div>
+            <div class="sentence">
+              <span>I</span>
+              <select name="q11" aria-label="haven't made">
+                <option value="">— choose —</option>
+                <option value="didn't make">didn't make</option>
+                <option value="haven't made">haven't made</option>
+                <option value="wasn't making">wasn't making</option>
+              </select>
+              <span>any real progress on my project this week.</span>
+            </div>
+          </div>
+
+          <div class="exercise" data-answer="finished">
+            <div class="exercise-number">12</div>
+            <div class="sentence">
+              <span>She</span>
+              <select name="q12" aria-label="finished">
+                <option value="">— choose —</option>
+                <option value="has finished">has finished</option>
+                <option value="finished">finished</option>
+                <option value="was finishing">was finishing</option>
+              </select>
+              <span>all her tasks before lunch on Monday.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="submit">Check answers</button>
+        <p id="result" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <p class="hint">
+      <strong>Remember:</strong> Present Perfect connects past actions to now (today, this week, so far).
+      Past Simple is for finished actions at a specific time in the past (yesterday, at 4 p.m., on Monday).
+    </p>
+  </div>
+
+  <script>
+    const form = document.getElementById("quiz");
+    const result = document.getElementById("result");
+    const exercises = form.querySelectorAll(".exercise[data-answer]");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      let correct = 0;
+      let unanswered = 0;
+
+      exercises.forEach((block) => {
+        const select = block.querySelector("select");
+        const expected = block.dataset.answer;
+        const chosen = select.value;
+
+        block.classList.remove("correct", "incorrect");
+
+        if (!chosen) {
+          unanswered++;
+          block.classList.add("incorrect");
+          return;
+        }
+
+        if (chosen === expected) {
+          correct++;
+          block.classList.add("correct");
+        } else {
+          block.classList.add("incorrect");
+        }
+      });
+
+      result.classList.remove("success", "partial");
+
+      if (unanswered > 0) {
+        result.textContent = `Please answer all questions. ${correct} of ${exercises.length} correct so far.`;
+        result.classList.add("partial");
+        return;
+      }
+
+      if (correct === exercises.length) {
+        result.textContent = `Perfect! ${correct} / ${exercises.length} — well done!`;
+        result.classList.add("success");
+      } else {
+        result.textContent = `${correct} / ${exercises.length} correct. Try again!`;
+        result.classList.add("partial");
+      }
+    });
+
+    form.querySelectorAll("select").forEach((select) => {
+      select.addEventListener("change", () => {
+        select.closest(".exercise").classList.remove("correct", "incorrect");
+        result.textContent = "";
+        result.classList.remove("success", "partial");
+      });
+    });
+  </script>
+</body>
+</html>
