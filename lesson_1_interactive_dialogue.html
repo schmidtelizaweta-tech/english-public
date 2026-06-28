@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Полноценный диалог для Валеры</title>
+  <style>
+    :root {
+      --bg: #f5f7ff;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #4f46e5;
+      --accent-soft: #e0e7ff;
+      --correct: #0f9d58;
+      --correct-soft: #dcfce7;
+      --wrong: #dc2626;
+      --wrong-soft: #fee2e2;
+      --border: #dbe3f0;
+      --shadow: 0 20px 40px rgba(31, 41, 55, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    .card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--surface);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .hero {
+      background: linear-gradient(90deg, var(--accent), #6366f1 70%, #818cf8);
+      color: white;
+      padding: 24px 24px 20px;
+    }
+
+    .hero h1 { margin: 0 0 8px; font-size: 1.7rem; }
+    .hero p { margin: 0; line-height: 1.55; opacity: 0.95; }
+
+    .content { padding: 24px; }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .progress {
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #8b5cf6);
+      transition: width 0.3s ease;
+    }
+
+    .dialogue-box {
+      background: #f9fbff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .bubble {
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      max-width: 90%;
+      line-height: 1.5;
+    }
+
+    .bubble.person {
+      background: #eef2ff;
+      border: 1px solid #dbe4ff;
+    }
+
+    .bubble.valera {
+      background: #ecfdf5;
+      border: 1px solid #bcf0d5;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .option.correct {
+      border-color: var(--correct);
+      background: var(--correct-soft);
+      color: #166534;
+    }
+
+    .option.wrong {
+      border-color: var(--wrong);
+      background: var(--wrong-soft);
+      color: #991b1b;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.correct { display: block; background: var(--correct-soft); color: #166534; }
+    .feedback.wrong { display: block; background: var(--wrong-soft); color: #991b1b; }
+
+    .actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+    button.next {
+      border: none;
+      border-radius: 999px;
+      background: var(--accent);
+      color: white;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: none;
+    }
+    button.next.show { display: inline-block; }
+
+    .result {
+      display: none;
+      background: linear-gradient(90deg, #ecfdf5, #f0fdf4);
+      border: 1px solid #a7f3d0;
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+    }
+    .result.show { display: block; }
+    .result h3 { margin: 0 0 8px; color: #166534; }
+    .small { color: var(--muted); font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="hero">
+      <h1>Полноценный диалог для Валеры</h1>
+      <p>Выбирай подходящую реплику, как в живом разговоре. Практикуй формы to be, вопросы и фразы для знакомства.</p>
+    </div>
+
+    <div class="content">
+      <div class="topline">
+        <span class="badge" id="counter">Шаг 1 / 8</span>
+        <span class="small">Выбери один правильный вариант</span>
+      </div>
+
+      <div class="progress"><div id="progressBar"></div></div>
+
+      <div class="dialogue-box" id="dialogueBox">
+        <div class="bubble person" id="personLine"></div>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="actions">
+          <button class="next" id="nextBtn">Следующий шаг</button>
+        </div>
+      </div>
+
+      <div class="result" id="resultBox">
+        <h3>Отлично! Диалог завершён.</h3>
+        <p>Ты правильно ответил на вопросы про to be, знакомство и простые фразы в диалоге.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dialogue = [
+      {
+        person: 'Anna: Hi! Nice to meet you. What is your name?',
+        options: ['My name is Valera.', 'I am Valera from Moscow.', 'My name Valera.'],
+        correct: 0,
+        feedback: 'Правильно! В ответе используем My name is ...'
+      },
+      {
+        person: 'Anna: Where are you from?',
+        options: ['I am from Moscow.', 'I from Moscow.', 'Am from Moscow.'],
+        correct: 0,
+        feedback: 'Правильно! С I в утвердительной форме нужен am.'
+      },
+      {
+        person: 'Anna: Are you a student?',
+        options: ['Yes, I am.', 'Yes, I is.', 'Yes, I are.'],
+        correct: 0,
+        feedback: 'Правильно! В кратком ответе с I — am.'
+      },
+      {
+        person: 'Anna: Is your teacher kind?',
+        options: ['Yes, she is.', 'Yes, she are.', 'Yes, she am.'],
+        correct: 0,
+        feedback: 'Правильно! С she используем is.'
+      },
+      {
+        person: 'Anna: Are you tired today?',
+        options: ['No, I am not.', 'No, I is not.', 'No, I are not.'],
+        correct: 0,
+        feedback: 'Правильно! В отрицании с I — am not.'
+      },
+      {
+        person: 'Anna: What do you do?',
+        options: ['I am a teacher.', 'I do a teacher.', 'I does a teacher.'],
+        correct: 0,
+        feedback: 'Правильно! В этой фразе нужен do.'
+      },
+      {
+        person: 'Anna: Is this your first lesson?',
+        options: ['Yes, it is.', 'Yes, it am.', 'Yes, it are.'],
+        correct: 0,
+        feedback: 'Правильно! С it используем is.'
+      },
+      {
+        person: 'Anna: Are you ready for the lesson?',
+        options: ['Yes, I am.', 'Yes, I is.', 'Yes, I are.'],
+        correct: 0,
+        feedback: 'Правильно! В ответе с I — am.'
+      }
+    ];
+
+    let current = 0;
+    let answered = false;
+
+    const personLine = document.getElementById('personLine');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const counterEl = document.getElementById('counter');
+    const progressBar = document.getElementById('progressBar');
+    const resultBox = document.getElementById('resultBox');
+
+    function renderStep() {
+      const step = dialogue[current];
+      personLine.textContent = step.person;
+      optionsEl.innerHTML = '';
+      feedbackEl.className = 'feedback';
+      feedbackEl.textContent = '';
+      nextBtn.classList.remove('show');
+      answered = false;
+
+      step.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option';
+        btn.textContent = option;
+        btn.addEventListener('click', () => checkAnswer(index));
+        optionsEl.appendChild(btn);
+      });
+
+      counterEl.textContent = `Шаг ${current + 1} / ${dialogue.length}`;
+      progressBar.style.width = `${((current + 1) / dialogue.length) * 100}%`;
+    }
+
+    function checkAnswer(selectedIndex) {
+      if (answered) return;
+      answered = true;
+      const step = dialogue[current];
+      const buttons = Array.from(optionsEl.children);
+
+      buttons.forEach((btn, index) => {
+        if (index === step.correct) {
+          btn.classList.add('correct');
+        } else if (index === selectedIndex) {
+          btn.classList.add('wrong');
+        }
+      });
+
+      if (selectedIndex === step.correct) {
+        feedbackEl.className = 'feedback correct';
+        feedbackEl.textContent = `Правильно! ${step.feedback}`;
+      } else {
+        feedbackEl.className = 'feedback wrong';
+        feedbackEl.textContent = `Не совсем. ${step.feedback}`;
+      }
+
+      nextBtn.classList.add('show');
+    }
+
+    nextBtn.addEventListener('click', () => {
+      current += 1;
+      if (current < dialogue.length) {
+        renderStep();
+      } else {
+        document.getElementById('dialogueBox').style.display = 'none';
+        resultBox.classList.add('show');
+      }
+    });
+
+    renderStep();
+  </script>
+</body>
+</html>
