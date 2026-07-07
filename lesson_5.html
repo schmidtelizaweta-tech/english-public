@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 5 — Cyber Scam Awareness</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: rgba(255, 255, 255, 0.95);
+      --ink: #14213d;
+      --muted: #5f6b7a;
+      --accent: #2563eb;
+      --accent-2: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --border: rgba(20, 33, 61, 0.12);
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.28), transparent 28%),
+        linear-gradient(135deg, #07111f 0%, #10233f 45%, #0f172a 100%);
+      min-height: 100vh;
+      padding: 28px 16px 48px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--panel);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 34px 34px 24px;
+      background: linear-gradient(120deg, rgba(37, 99, 235, 0.95), rgba(14, 165, 233, 0.9));
+      color: white;
+    }
+
+    .hero h1 {
+      margin: 8px 0 8px;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      margin: 0 0 16px;
+      font-size: 1.02rem;
+      opacity: 0.95;
+      max-width: 760px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .meta span {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      backdrop-filter: blur(6px);
+      font-size: 0.95rem;
+    }
+
+    .content { padding: 28px 34px 40px; }
+
+    .section {
+      margin-bottom: 28px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fcfdff;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 1.18rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .section-title .time {
+      font-size: 0.95rem;
+      color: var(--accent);
+      font-weight: 700;
+      background: rgba(37, 99, 235, 0.1);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .lead {
+      color: var(--muted);
+      margin: 0 0 14px;
+      line-height: 1.6;
+    }
+
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .vocab-card {
+      border: 1px solid rgba(37, 99, 235, 0.14);
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .vocab-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.12);
+    }
+
+    .vocab-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    .answer-box {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: linear-gradient(120deg, rgba(16, 185, 129, 0.12), rgba(14, 165, 233, 0.12));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      min-height: 58px;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .discussion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .card {
+      padding: 16px;
+      border-radius: 14px;
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    ol, ul { padding-left: 18px; }
+    li { margin-bottom: 8px; }
+
+    .scenario-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .scenario {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    .scenario h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .scenario p { margin: 0 0 10px; line-height: 1.55; }
+
+    .toggle {
+      border: none;
+      background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      color: white;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #f8fbff;
+      border: 1px dashed rgba(37, 99, 235, 0.25);
+      line-height: 1.55;
+    }
+
+    .mini {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 860px) {
+      .vocab-grid, .discussion-grid { grid-template-columns: 1fr; }
+      .content { padding: 20px; }
+      .hero { padding: 24px 20px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <span class="badge">Lesson 5</span>
+      <h1>Cyber Scam Awareness</h1>
+      <p>Focus on online safety, scam patterns, trust, and clear decisions under pressure.</p>
+      <div class="meta">
+        <span>Level: B1–B2</span>
+        <span>Time: 60 minutes</span>
+        <span>Topic: cyber scams, warning signs, and safe responses</span>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="section">
+        <div class="section-title">Warm-up — Vocabulary Review <span class="time">10 min</span></div>
+        <p class="lead">Click each card to reveal the meaning and a short example.</p>
+        <div class="vocab-grid">
+          <button class="vocab-card" data-answer="A scam is a dishonest plan designed to trick someone for money or personal information."><strong>scam</strong><span>Example: A fake investment offer.</span></button>
+          <button class="vocab-card" data-answer="Phishing is a message that tries to make a person reveal private information."><strong>phishing</strong><span>Example: A fake email asking for a password.</span></button>
+          <button class="vocab-card" data-answer="A warning sign is something that suggests a situation may be dangerous or fake."><strong>warning sign</strong><span>Example: Pressure to act immediately.</span></button>
+          <button class="vocab-card" data-answer="Verification means checking whether information, a person, or a company is real."><strong>verification</strong><span>Example: Confirming a website before paying.</span></button>
+          <button class="vocab-card" data-answer="A suspicious message looks strange, unclear, or too good to be true."><strong>suspicious</strong><span>Example: A message from an unknown sender.</span></button>
+          <button class="vocab-card" data-answer="A password manager stores passwords and helps protect them securely."><strong>password manager</strong><span>Example: A tool that creates strong passwords.</span></button>
+          <button class="vocab-card" data-answer="Private information includes personal details such as addresses, IDs, and bank details."><strong>private information</strong><span>Example: A card number or home address.</span></button>
+          <button class="vocab-card" data-answer="A victim is a person who has been tricked or harmed by a dishonest action."><strong>victim</strong><span>Example: Someone who loses money to a fraud.</span></button>
+        </div>
+        <div id="answerBox" class="answer-box">Select a word to reveal its meaning.</div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">Discussion Questions <span class="time">30 min</span></div>
+        <p class="lead">Choose one question at a time and speak for about one minute. Try to add examples, reasons, and a clear opinion.</p>
+        <div class="discussion-grid">
+          <div class="card">
+            <h3>Part A — Awareness</h3>
+            <ol>
+              <li>What are the most common warning signs of a scam?</li>
+              <li>How can people protect themselves from online fraud?</li>
+              <li>Why do some people fall for scams even when they seem obvious?</li>
+              <li>What is the difference between a risky message and a normal one?</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h3>Part B — Personal perspective</h3>
+            <ol>
+              <li>Have you ever received a suspicious message or call?</li>
+              <li>What would you do if someone asked for your bank details immediately?</li>
+              <li>Do you think people trust online offers too quickly?</li>
+              <li>How important is it to verify a company before sharing any information?</li>
+            </ol>
+          </div>
+        </div>
+        <p class="mini">Extension: Compare your answer with a partner and explain your reasoning.</p>
+      </section>
+
+      <section class="section">
+        <div class="section-title">Conflict Situations <span class="time">20 min</span></div>
+        <p class="lead">Read each scenario, discuss what the person should do, and then reveal a possible response.</p>
+        <div class="scenario-list">
+          <article class="scenario">
+            <h3>1. Urgent payment</h3>
+            <p>A message says your bank account will be closed unless you confirm your details today. The sender sounds calm, but the message creates pressure.</p>
+            <button class="toggle">Show possible response</button>
+            <div class="hidden">A strong reply is: “I will not share personal details by message. I will contact the bank directly through the official number.”</div>
+          </article>
+
+          <article class="scenario">
+            <h3>2. Fake investment offer</h3>
+            <p>A caller promises very high returns in just a few days and says the opportunity is available only for a short time.</p>
+            <button class="toggle">Show possible response</button>
+            <div class="hidden">A strong reply is: “This sounds unrealistic. I need time to verify the company before I make any decision.”</div>
+          </article>
+
+          <article class="scenario">
+            <h3>3. Prize message</h3>
+            <p>A person receives an email saying they have won a prize, but the link asks for a passport number and an address.</p>
+            <button class="toggle">Show possible response</button>
+            <div class="hidden">A strong reply is: “I would never share sensitive information through an unknown link. I would ignore the message and report it.”</div>
+          </article>
+
+          <article class="scenario">
+            <h3>4. Pressure from a friend</h3>
+            <p>A friend sends a message saying, “Please send me the code from your verification app. I need it now.”</p>
+            <button class="toggle">Show possible response</button>
+            <div class="hidden">A strong reply is: “I cannot share that code. It is private and could put my account at risk.”</div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.vocab-card');
+    const answerBox = document.getElementById('answerBox');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        answerBox.textContent = card.dataset.answer;
+      });
+    });
+
+    document.querySelectorAll('.toggle').forEach(button => {
+      button.addEventListener('click', () => {
+        const hidden = button.nextElementSibling;
+        const isVisible = hidden.style.display === 'block';
+        hidden.style.display = isVisible ? 'none' : 'block';
+        button.textContent = isVisible ? 'Show possible response' : 'Hide possible response';
+      });
+    });
+  </script>
+</body>
+</html>
