@@ -52,6 +52,12 @@
     .choice-btn.wrong{background:#fdecec;border-color:var(--wrong);color:var(--wrong)}
     .buttons-row{margin-top:8px}
     .action-btn{padding:8px 12px;border:none;border-radius:999px;background:var(--accent);color:#fff;cursor:pointer;font-weight:600}
+    .mission-card{margin-top:10px;padding:16px;border:1px solid var(--border);border-radius:14px;background:#fcfbf7}
+    .mission-card h2{margin:0 0 8px;font-size:20px;color:var(--accent)}
+    .mission-card h3{margin:10px 0 6px;font-size:15px;color:var(--accent3)}
+    .tip{margin-top:8px;font-style:italic;color:var(--accent3)}
+    .next-step{margin-top:14px;padding:12px 14px;border-left:3px solid var(--accent);background:var(--accent2);border-radius:8px}
+    .next-step h3{margin:0 0 6px;font-size:15px;color:var(--accent)}
     textarea{width:100%;min-height:120px;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit;resize:vertical}
     .checklist{padding-left:1.15rem;margin:8px 0 0}
     .checklist li{margin:4px 0}
@@ -72,8 +78,7 @@
       <section>
         <div class="section-title">Video 1 — Watch</div>
         <div class="video-wrap">
-          <a href="https://www.youtube.com/watch?v=UZTxIXfk2uM&source_ve_path=MTc4NDI0" target="_blank" rel="noopener noreferrer" style="display:block;position:absolute;inset:0;z-index:2"></a>
-          <iframe src="https://www.youtube.com/embed/UZTxIXfk2uM" allowfullscreen title="Ancient world video 1"></iframe>
+          <iframe src="https://www.youtube.com/embed/UZTxIXfk2uM" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" title="Ancient world video 1"></iframe>
         </div>
         <p class="tiny">Watch the clip and focus on the facts, the images and the useful phrases.</p>
       </section>
@@ -93,8 +98,7 @@
       <section>
         <div class="section-title">Video 2 — Watch</div>
         <div class="video-wrap">
-          <a href="https://www.youtube.com/watch?v=E7oEq6CE78g&source_ve_path=MTc4NDI0" target="_blank" rel="noopener noreferrer" style="display:block;position:absolute;inset:0;z-index:2"></a>
-          <iframe src="https://www.youtube.com/embed/E7oEq6CE78g" allowfullscreen title="Ancient world video 2"></iframe>
+          <iframe src="https://www.youtube.com/embed/E7oEq6CE78g" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy" title="Ancient world video 2"></iframe>
         </div>
         <p class="tiny">Watch the second clip and focus on the main idea, the atmosphere and the useful language.</p>
       </section>
@@ -140,9 +144,30 @@
       </section>
 
       <section>
-        <div class="section-title">Lesson mission</div>
-        <p class="lead">Bring one useful expression, one opinion you agree with, and one question you want to discuss next lesson.</p>
-        <textarea placeholder="My mission..."></textarea>
+        <div class="section-title">Peer Mission</div>
+        <div class="mission-card">
+          <h2>🏺 Message from the Past</h2>
+          <p>You are preparing a mysterious exhibit about Ancient Egypt.</p>
+          <p>Choose <strong>one object, person, belief or tradition</strong> from the topic. Describe it without saying its name.</p>
+          <h3>Your description should include:</h3>
+          <ul>
+            <li>what it looks like;</li>
+            <li>what it was used for;</li>
+            <li>why it was important;</li>
+            <li>one surprising fact.</li>
+          </ul>
+          <p>Write <strong>4–6 sentences</strong>. Another history lover will read your message and try to guess what you described.</p>
+          <p class="tip">💡 Use at least three expressions from the lesson.</p>
+          <label for="pastMessage">Write your mysterious message:</label>
+          <textarea id="pastMessage" rows="8" placeholder="It was made of... People used it to... It was important because..."></textarea>
+          <p id="sentenceCounter">0 / 4–6 sentences</p>
+          <button type="button" id="copyPastMessage" class="action-btn">Copy my message</button>
+          <p id="copyConfirmation" aria-live="polite"></p>
+        </div>
+        <div class="next-step">
+          <h3>What happens next?</h3>
+          <p>Lisa will send your message anonymously to another student who loves history. They will try to guess the answer and ask you two questions. We will read their reply in the next lesson.</p>
+        </div>
       </section>
     </div>
   </div>
@@ -256,6 +281,40 @@
 
       summaryFeedback.textContent = chosenOption.correct ? 'Correct!' : 'Try again.';
     }
+
+    const messageField = document.getElementById('pastMessage');
+    const counter = document.getElementById('sentenceCounter');
+    const copyButton = document.getElementById('copyPastMessage');
+    const confirmation = document.getElementById('copyConfirmation');
+
+    function countSentences(text) {
+      return text
+        .split(/[.!?]+/)
+        .map(sentence => sentence.trim())
+        .filter(Boolean)
+        .length;
+    }
+
+    messageField.addEventListener('input', () => {
+      const numberOfSentences = countSentences(messageField.value);
+      counter.textContent = `${numberOfSentences} / 4–6 sentences`;
+    });
+
+    copyButton.addEventListener('click', async () => {
+      const message = messageField.value.trim();
+
+      if (!message) {
+        confirmation.textContent = 'Write your message first.';
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(message);
+        confirmation.textContent = 'Copied ✓ Send it to Lisa.';
+      } catch (error) {
+        confirmation.textContent = 'Could not copy automatically. Select the text and copy it manually.';
+      }
+    });
 
     checkFactsBtn.addEventListener('click', checkFactAnswers);
     renderFactOptions();
