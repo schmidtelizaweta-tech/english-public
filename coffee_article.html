@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Coffee Culture</title>
+  <style>
+    :root{
+      --bg:#f5f1ea;
+      --surface:#fffdf9;
+      --text:#24211f;
+      --muted:#6b645d;
+      --accent:#8b4b2f;
+      --accent2:#e8d7ca;
+      --accent3:#3f6a4d;
+      --correct:#2d6a3f;
+      --wrong:#b84b4b;
+      --border:#e4d8cb;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, "Segoe UI", Arial, sans-serif;background:linear-gradient(135deg,#f7efe8 0%,#f5f1ea 100%);color:var(--text);line-height:1.6;padding:24px}
+    .container{max-width:860px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 18px 45px rgba(60,34,20,.08);overflow:hidden}
+    .hero{padding:28px 28px 14px;background:linear-gradient(90deg,#7f4a31 0%,#a56744 100%);color:#fff}
+    .hero h1{margin:0 0 8px;font-size:28px;font-weight:700}
+    .hero p{margin:0;font-size:15px;opacity:.95}
+    .content{padding:24px 28px 30px}
+    section{margin:18px 0;padding:16px 0;border-top:1px solid #efe4d8}
+    .section-title{font-size:17px;font-weight:700;color:var(--accent);margin-bottom:8px}
+    .lead{color:var(--muted);margin:0 0 8px}
+    .article{background:#fcf7f2;border:1px solid var(--border);border-radius:14px;padding:16px 16px 10px}
+    .article p{margin:0 0 10px}
+    .phrase{font-weight:700;color:var(--accent)}
+    .match-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:10px 0}
+    .column{display:flex;flex-direction:column;gap:8px}
+    .column-label{font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:3px}
+    .chip{display:block;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;transition:all .2s ease;line-height:1.5}
+    .chip:hover{transform:translateY(-1px);border-color:var(--accent)}
+    .chip.selected{outline:2px solid var(--accent);background:#fdf2e8}
+    .chip.correct{background:#eaf7ee;border-color:var(--correct);color:var(--correct)}
+    .chip.wrong{background:#fdecec;border-color:var(--wrong);color:var(--wrong)}
+    .feedback{font-size:14px;color:var(--muted);min-height:22px;margin-top:6px}
+    .quiz-item{background:#fcf7f2;border:1px solid var(--border);border-radius:12px;padding:12px 12px 10px;margin:8px 0}
+    .buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .btn{padding:8px 12px;border:none;border-radius:999px;background:#f0e4da;color:var(--text);cursor:pointer;font-weight:600}
+    .btn.active{background:var(--accent);color:#fff}
+    .btn.correct{background:var(--correct);color:#fff}
+    .btn.wrong{background:var(--wrong);color:#fff}
+    textarea{width:100%;min-height:120px;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit;resize:vertical}
+    .checklist{padding-left:1.15rem;margin:8px 0 0}
+    .checklist li{margin:4px 0}
+    .tiny{font-size:13px;color:var(--muted)}
+    .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--accent2);color:var(--accent);font-size:12px}
+    @media (max-width:700px){.match-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Coffee Culture</h1>
+      <p>Read the article, learn the most useful expressions, and prepare a short speaking response. Aim for quality, not speed.</p>
+    </div>
+
+    <div class="content">
+      <section>
+        <div class="section-title">Read</div>
+        <p class="lead">Focus on useful chunks and collocations.</p>
+        <div class="article">
+          <p>Coffee is more than a drink for many people. In cities around the world, it has become a daily ritual, a social habit, and sometimes even a part of someone’s identity. For some, the morning begins with <span class="phrase">a strong cup of coffee</span> and a few quiet minutes before the day gets busy. For others, the best part of the day is the moment they <span class="phrase">brew a fresh cup</span> and sit down with a notebook or a friend.</p>
+          <p>In many cafés, people do more than drink coffee. They <span class="phrase">sip slowly</span>, look out of the window, and <span class="phrase">drift into a conversation</span> that starts with a simple question about the week. Coffee can also be <span class="phrase">a quick caffeine fix</span> on a rushed morning, but for many people it is <span class="phrase">a ritual of comfort</span>, something they return to when life feels stressful.</p>
+          <p>However, the coffee world is not only about comfort. Some people <span class="phrase">get hooked on coffee</span> and feel they cannot start the day without it. Others try to <span class="phrase">cut back on caffeine</span> because they want better sleep or lower anxiety. The conversation around coffee is changing too. More people now care about where the beans come from, how they are roasted, and whether the coffee is fair trade.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">Match the chunks</div>
+        <p class="lead">Choose the best meaning for each expression. The order is different.</p>
+        <div class="match-grid">
+          <div class="column">
+            <div class="column-label">Expressions</div>
+            <div id="phraseList"></div>
+          </div>
+          <div class="column">
+            <div class="column-label">Meanings</div>
+            <div id="meaningList"></div>
+          </div>
+        </div>
+        <div class="feedback" id="matchFeedback"></div>
+      </section>
+
+      <section>
+        <div class="section-title">Reading check</div>
+        <p class="lead">Choose True or False.</p>
+        <div id="quizList"></div>
+      </section>
+
+      <section>
+        <div class="section-title">Notice the language</div>
+        <p class="lead">Write one phrase you want to remember, one phrase you could use in real life, and one sentence that felt interesting or surprising.</p>
+        <div class="pill-row">
+          <span class="pill">chunk</span>
+          <span class="pill">collocation</span>
+          <span class="pill">real-life use</span>
+        </div>
+        <textarea placeholder="Write your notes here..."></textarea>
+      </section>
+
+      <section>
+        <div class="section-title">Make it yours</div>
+        <p class="lead">Rewrite one sentence from the article so it becomes true about you.</p>
+        <textarea placeholder="My version..."></textarea>
+      </section>
+
+      <section>
+        <div class="section-title">Discussion prep</div>
+        <ul class="checklist">
+          <li>What does coffee mean in your daily routine?</li>
+          <li>When do you think coffee becomes more than a drink?</li>
+          <li>Would you rather have a quiet coffee break or a busy café conversation?</li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="section-title">Lesson mission</div>
+        <p class="lead">Bring one useful expression, one opinion you agree with, and one question you want to discuss next lesson.</p>
+        <textarea placeholder="My mission..."></textarea>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const phrases = [
+      { id: 'brew', text: 'brew a fresh cup' },
+      { id: 'sip', text: 'sip slowly' },
+      { id: 'drift', text: 'drift into a conversation' },
+      { id: 'fix', text: 'a quick caffeine fix' },
+      { id: 'ritual', text: 'a ritual of comfort' },
+      { id: 'hooked', text: 'get hooked on coffee' },
+      { id: 'cut', text: 'cut back on caffeine' },
+      { id: 'strong', text: 'a strong cup of coffee' }
+    ];
+
+    const meanings = [
+      { id: 'brew', text: 'make coffee freshly and serve it right away' },
+      { id: 'sip', text: 'drink it in small amounts and not too fast' },
+      { id: 'drift', text: 'start talking naturally without planning it' },
+      { id: 'fix', text: 'something that gives you a fast boost of energy' },
+      { id: 'ritual', text: 'a repeated activity that feels calming and familiar' },
+      { id: 'hooked', text: 'become so attached to it that you want it often' },
+      { id: 'cut', text: 'reduce how much caffeine you consume' },
+      { id: 'strong', text: 'coffee with a lot of flavour and a clear effect' }
+    ];
+
+    const phraseList = document.getElementById('phraseList');
+    const meaningList = document.getElementById('meaningList');
+    const matchFeedback = document.getElementById('matchFeedback');
+    const quizList = document.getElementById('quizList');
+
+    let selectedPhrase = null;
+    let selectedMeaning = null;
+    let matchedPairs = new Set();
+
+    function renderMatching() {
+      const shuffledMeanings = [...meanings].sort(() => Math.random() - 0.5);
+      phraseList.innerHTML = '';
+      meaningList.innerHTML = '';
+
+      phrases.forEach(item => {
+        const button = document.createElement('button');
+        button.className = 'chip';
+        button.textContent = item.text;
+        button.dataset.id = item.id;
+        button.addEventListener('click', () => selectPhrase(item.id));
+        phraseList.appendChild(button);
+      });
+
+      shuffledMeanings.forEach(item => {
+        const button = document.createElement('button');
+        button.className = 'chip';
+        button.textContent = item.text;
+        button.dataset.id = item.id;
+        button.addEventListener('click', () => selectMeaning(item.id));
+        meaningList.appendChild(button);
+      });
+    }
+
+    function selectPhrase(id) {
+      if (matchedPairs.has(id)) return;
+      selectedPhrase = id;
+      document.querySelectorAll('#phraseList .chip').forEach(btn => btn.classList.remove('selected'));
+      document.querySelector(`#phraseList .chip[data-id="${id}"]`).classList.add('selected');
+      checkPair();
+    }
+
+    function selectMeaning(id) {
+      if (matchedPairs.has(id)) return;
+      selectedMeaning = id;
+      document.querySelectorAll('#meaningList .chip').forEach(btn => btn.classList.remove('selected'));
+      document.querySelector(`#meaningList .chip[data-id="${id}"]`).classList.add('selected');
+      checkPair();
+    }
+
+    function checkPair() {
+      if (!selectedPhrase || !selectedMeaning) return;
+
+      const phraseButton = document.querySelector(`#phraseList .chip[data-id="${selectedPhrase}"]`);
+      const meaningButton = document.querySelector(`#meaningList .chip[data-id="${selectedMeaning}"]`);
+
+      if (selectedPhrase === selectedMeaning) {
+        phraseButton.classList.add('correct');
+        meaningButton.classList.add('correct');
+        matchedPairs.add(selectedPhrase);
+        matchedPairs.add(selectedMeaning);
+        matchFeedback.textContent = 'Perfect!';
+      } else {
+        phraseButton.classList.add('wrong');
+        meaningButton.classList.add('wrong');
+        matchFeedback.textContent = 'Try again.';
+        setTimeout(() => {
+          phraseButton.classList.remove('wrong');
+          meaningButton.classList.remove('wrong');
+          phraseButton.classList.remove('selected');
+          meaningButton.classList.remove('selected');
+          selectedPhrase = null;
+          selectedMeaning = null;
+          matchFeedback.textContent = '';
+        }, 750);
+      }
+
+      selectedPhrase = null;
+      selectedMeaning = null;
+    }
+
+    const quizItems = [
+      { text: 'Coffee can be a social habit as well as a daily ritual.', answer: true },
+      { text: 'The article says coffee is only about comfort.', answer: false },
+      { text: 'The writer suggests that coffee can help people slow down.', answer: true },
+      { text: 'The article says people usually avoid coffee completely.', answer: false },
+      { text: 'The writer mentions that some people want to reduce caffeine.', answer: true },
+      { text: 'The article says coffee is only a drink with no cultural meaning.', answer: false }
+    ];
+
+    function renderQuiz() {
+      quizList.innerHTML = '';
+      quizItems.forEach((item, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'quiz-item';
+        wrapper.innerHTML = `<div>${index + 1}. ${item.text}</div>`;
+
+        const buttons = document.createElement('div');
+        buttons.className = 'buttons';
+
+        const trueBtn = document.createElement('button');
+        trueBtn.className = 'btn';
+        trueBtn.textContent = 'True';
+        trueBtn.addEventListener('click', () => checkQuizAnswer(trueBtn, item.answer, true));
+
+        const falseBtn = document.createElement('button');
+        falseBtn.className = 'btn';
+        falseBtn.textContent = 'False';
+        falseBtn.addEventListener('click', () => checkQuizAnswer(falseBtn, item.answer, false));
+
+        buttons.append(trueBtn, falseBtn);
+        wrapper.appendChild(buttons);
+        quizList.appendChild(wrapper);
+      });
+    }
+
+    function checkQuizAnswer(button, correctAnswer, chosenAnswer) {
+      const buttons = button.parentElement.querySelectorAll('.btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      if (chosenAnswer === correctAnswer) {
+        button.classList.remove('active');
+        button.classList.add('correct');
+      } else {
+        button.classList.remove('active');
+        button.classList.add('wrong');
+      }
+    }
+
+    renderMatching();
+    renderQuiz();
+  </script>
+</body>
+</html>
