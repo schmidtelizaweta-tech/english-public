@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hitman Mission</title>
+  <style>
+    :root{
+      --bg:#f5efe8;
+      --surface:#fcfaf7;
+      --text:#23211f;
+      --muted:#6f685f;
+      --accent:#465a4a;
+      --accent-soft:#e9efe8;
+      --border:#d9d0c8;
+      --ok:#2f7a47;
+      --bad:#b64b4b;
+      --warning:#8d6a2f;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;background:linear-gradient(135deg,#f7efe8 0%,#f1ebdf 100%);color:var(--text);line-height:1.6;padding:20px}
+    .container{width:min(100% - 24px, 960px);margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:0 16px 40px rgba(35,33,31,.08);overflow:hidden}
+    .hero{position:relative;padding:28px 28px 20px;background:linear-gradient(90deg,#3f4f44 0%,#5f6e5a 100%);color:white}
+    .hero h1{margin:0 0 8px;font-size:30px;font-weight:700;letter-spacing:.2px}
+    .hero .subtitle{margin:0;font-size:15px;opacity:.95}
+    .brand-icon{position:absolute;top:16px;right:16px;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);padding:6px;box-shadow:0 8px 18px rgba(0,0,0,.14)}
+    .brand-icon img{width:100%;height:100%;object-fit:contain;display:block}
+    .content{padding:24px 28px 30px}
+    .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+    .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:600}
+    section{margin:18px 0;padding:16px 0;border-top:1px solid #efe7dc}
+    .section-title{font-size:17px;font-weight:700;color:var(--accent);margin-bottom:8px}
+    .lead{margin:0 0 8px;color:var(--muted)}
+    .video-wrapper{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:16px;background:#111;margin:10px 0 8px}
+    .video-wrapper iframe{width:100%;height:100%;border:0;display:block}
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+    .column{display:flex;flex-direction:column;gap:8px}
+    .column-label{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:3px}
+    .choice{display:block;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;transition:all .2s ease;line-height:1.45}
+    .choice:hover{transform:translateY(-1px);border-color:var(--accent)}
+    .choice.selected{outline:2px solid var(--accent);background:#f5f8f4}
+    .choice.correct{background:#eaf7ec;border-color:var(--ok);color:var(--ok)}
+    .choice.wrong{background:#fdecec;border-color:var(--bad);color:var(--bad)}
+    .feedback{min-height:24px;margin-top:8px;color:var(--warning);font-weight:600}
+    .btn-row{margin-top:10px}
+    .action-btn{padding:8px 12px;border:none;border-radius:999px;background:var(--accent);color:white;cursor:pointer;font-weight:600}
+    .task-box{background:#faf7f2;border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:10px}
+    .task-box h3{margin:0 0 8px;font-size:16px;color:var(--accent)}
+    .options{padding-left:1.1rem;margin:8px 0 0}
+    .option-btn{display:block;width:100%;text-align:left;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;transition:all .2s ease;line-height:1.45;margin:8px 0}
+    .option-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+    .option-btn.selected{outline:2px solid var(--accent);background:#f5f8f4}
+    .option-btn.correct{background:#eaf7ec;border-color:var(--ok);color:var(--ok)}
+    .option-btn.wrong{background:#fdecec;border-color:var(--bad);color:var(--bad)}
+    .mission-card{background:#faf7f2;border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:10px;box-shadow:0 8px 24px rgba(35,33,31,.05)}
+    .mission-card h3{margin:0 0 8px;font-size:16px;color:var(--accent)}
+    .generated-message{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;margin:12px 0;white-space:pre-wrap}
+    .copy-btn{padding:8px 12px;border:none;border-radius:999px;background:var(--accent);color:white;cursor:pointer;font-weight:600}
+    .copy-btn.copied{background:var(--ok)}
+    .helper-text{font-size:13px;color:var(--muted);margin-top:8px}
+    textarea{width:100%;min-height:112px;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit;resize:vertical}
+    .kvothe{margin-top:20px;padding:14px 16px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:10px;color:var(--accent)}
+    .kvothe strong{display:block;margin-bottom:4px}
+    .tiny{font-size:13px;color:var(--muted)}
+    @media (max-width:700px){.match-grid{grid-template-columns:1fr}.brand-icon{width:48px;height:48px;top:14px;right:14px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <h1>Hitman Mission</h1>
+      <p class="subtitle"><em>— Isn’t that poisonous?</em></p>
+      <p class="subtitle"><em>— Yes.</em></p>
+      <p class="subtitle"><em>— Should I be worried?</em></p>
+      <p class="subtitle"><em>— I’m not.</em></p>
+    </header>
+
+    <div class="content">
+      <div class="chip-row"></div>
+
+      <section>
+        <div class="section-title">Vocabulary</div>
+        <p class="lead">Match each collocation with the correct meaning.</p>
+
+        <div class="match-grid">
+          <div class="column">
+            <button class="choice" data-left="blend">1. blend in</button>
+            <button class="choice" data-left="distraction">2. make a distraction</button>
+            <button class="choice" data-left="tracks">3. cover your tracks</button>
+            <button class="choice" data-left="shot">4. take the shot</button>
+          </div>
+          <div class="column">
+            <button class="choice" data-right="tracks">a. hide evidence or remove signs of your actions</button>
+            <button class="choice" data-right="distraction">b. create something that draws attention away from you</button>
+            <button class="choice" data-right="blend">c. become less noticeable in a place</button>
+            <button class="choice" data-right="shot">d. pull the trigger</button>
+          </div>
+        </div>
+        <div class="feedback" id="matchFeedback"></div>
+      </section>
+
+      <section>
+        <div class="section-title">Watch</div>
+        <p class="lead">Watch a short Hitman mission clip. Focus on the situation, the mood and the key actions.</p>
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/XoFhRmdNzsg&t=1s"
+            title="Hitman mission clip"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        </div>
+        <p class="note">If the video does not load, use this fallback link: <a href="https://www.youtube.com/results?search_query=hitman+mission+gameplay+clip" target="_blank" rel="noreferrer">Watch on YouTube</a></p>
+      </section>
+
+      <section>
+        <div class="section-title">After Watching</div>
+
+        <div class="task-box">
+          <h3>1. Choose the best answer</h3>
+          <p class="lead">What was the main challenge in the mission?</p>
+          <p class="lead">Choose the options that fit. There can be more than one correct answer.</p>
+          <div id="answerOptions" class="options"></div>
+        </div>
+
+        <div class="task-box">
+          <h3>2. What would be your actions here?</h3>
+          <p class="lead">What would you do in this situation if you were the agent? Why?</p>
+          <textarea placeholder="Write 2–3 sentences..."></textarea>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">Peer Mission — Another Perspective</div>
+        <div class="mission-card">
+          <h3>Mission Title</h3>
+          <p class="lead">A player is in a REALLY tense moment in the mission. What would you recommend they do first, and why?</p>
+          <p class="lead">Write your answer as if you are explaining the situation to another student. Then finish with one question for them.</p>
+          <div class="generated-message" id="generatedMessage">I would recommend that the player stay calm and wait for the right moment to act. If they rush, the whole plan could fall apart. I would also try to keep the target from noticing the danger. What would you do in this situation?</div>
+          <button class="copy-btn" id="copyBtn">Copy text</button>
+          <p class="helper-text">Send this message to your teacher or directly to another student if instructed.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">Steal it, make it yours</div>
+        <div class="task-box">
+          <textarea placeholder="My version..."></textarea>
+        </div>
+      </section>
+
+      <div class="kvothe">
+        <strong>Kvothe says:</strong>
+        Ok, that's enough for today. Go add beans to your borscht. Thanks for your ideas!
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const leftButtons = Array.from(document.querySelectorAll('.choice[data-left]'));
+    const rightButtons = Array.from(document.querySelectorAll('.choice[data-right]'));
+    const feedback = document.getElementById('matchFeedback');
+    const answerOptions = document.getElementById('answerOptions');
+    const copyBtn = document.getElementById('copyBtn');
+    const generatedMessage = document.getElementById('generatedMessage');
+    let selectedLeft = null;
+    let selectedRight = null;
+
+    const multipleChoiceItems = [
+      { text: 'Staying calm while the situation became more complicated', correct: true },
+      { text: 'Keeping the target from noticing the danger', correct: true },
+      { text: 'Making sure the plan stayed hidden from others', correct: true },
+      { text: 'Finding the safest exit from the area', correct: false },
+      { text: 'Ignoring the crowd completely', correct: false },
+      { text: 'Choosing the right moment to act', correct: true }
+    ];
+
+    function renderAnswerOptions() {
+      answerOptions.innerHTML = '';
+      multipleChoiceItems.forEach(item => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = item.text;
+        button.addEventListener('click', () => {
+          button.classList.add('selected');
+          if (item.correct) {
+            button.classList.add('correct');
+          } else {
+            button.classList.add('wrong');
+          }
+        });
+        answerOptions.appendChild(button);
+      });
+    }
+
+    renderAnswerOptions();
+
+    function resetSelection() {
+      selectedLeft = null;
+      selectedRight = null;
+      leftButtons.forEach(btn => btn.classList.remove('selected'));
+      rightButtons.forEach(btn => btn.classList.remove('selected'));
+    }
+
+    leftButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        leftButtons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedLeft = btn.dataset.left;
+        if (selectedLeft && selectedRight) checkMatch();
+      });
+    });
+
+    rightButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        rightButtons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedRight = btn.dataset.right;
+        if (selectedLeft && selectedRight) checkMatch();
+      });
+    });
+
+    function checkMatch() {
+      const leftBtn = leftButtons.find(btn => btn.dataset.left === selectedLeft);
+      const rightBtn = rightButtons.find(btn => btn.dataset.right === selectedRight);
+      const correct = selectedLeft === selectedRight;
+
+      if (correct) {
+        leftBtn.classList.add('correct');
+        rightBtn.classList.add('correct');
+        feedback.textContent = 'Nice — that one works.';
+        setTimeout(() => resetSelection(), 700);
+      } else {
+        leftBtn.classList.add('wrong');
+        rightBtn.classList.add('wrong');
+        feedback.textContent = 'Oops — nah, let\'s try again :)';
+        setTimeout(() => {
+          leftBtn.classList.remove('wrong');
+          rightBtn.classList.remove('wrong');
+          leftBtn.classList.remove('selected');
+          rightBtn.classList.remove('selected');
+          selectedLeft = null;
+          selectedRight = null;
+        }, 900);
+      }
+    }
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(generatedMessage.textContent);
+        copyBtn.textContent = '✓ Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => {
+          copyBtn.textContent = 'Copy text';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        copyBtn.textContent = 'Copy text';
+      }
+    });
+  </script>
+</body>
+</html>
